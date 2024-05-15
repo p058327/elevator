@@ -9,7 +9,7 @@ from settings import FLOOR_IMAGE, FLOOR_WIDTH, FLOOR_HEIGHT, \
 
 
 class Building(pygame.sprite.Group):
-    def __init__(self, num_of_floors, start_point: tuple):
+    def __init__(self, num_of_floors, num_of_elevators, start_point: tuple):
         super().__init__()
         self.floors = pygame.sprite.Group()
         self.buttons = pygame.sprite.Group()

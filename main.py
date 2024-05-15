@@ -1,7 +1,7 @@
 import pygame
 import settings as st
-from building import Building
-from timer import Timer
+from building_factory import create_building
+
 
 # Initialize Pygame
 pygame.init()
@@ -12,8 +12,7 @@ pygame.mixer.music.load(st.STOP_SOUND)
 background = st.BACKGROUND_IMAGE
 
 # Create the building
-building = Building(st.NUM_FLOORS, st.BUILDING_START_POINT)
-# timer = Timer(900, 100, 20, 40)
+building = create_building(0, st.NUM_FLOORS, st.NUM_ELEVATORS)
 
 
 def check_click(click):
@@ -44,9 +43,6 @@ while running:
     st.DISPLAY.fill(st.WHITE)
     st.DISPLAY.blit(background, st.DISPLAY.get_rect())
     background.blit(st.DISPLAY, st.DISPLAY.get_rect())
-
-    # timer.update(clock.get_time())
-    # timer.draw()
 
     # update the building state
     building.update(clock, st.DISPLAY)
