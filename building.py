@@ -34,7 +34,7 @@ class Building(pygame.sprite.Group):
             button = Button(button_position, button_width, button_height, floor.number,
                             "BLACK", button_radius)
             self.buttons.add(button)
-        for i in range(NUM_ELEVATORS):
+        for i in range(num_of_elevators):
             elevator = Elevator(i)
             elevator.rect.x = self.start_x + FLOOR_WIDTH // 2 + ELEVATOR_WIDTH * i
             elevator.rect.y = self.start_y - FLOOR_HEIGHT // 2
