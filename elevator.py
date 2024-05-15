@@ -1,5 +1,6 @@
 import pygame
-from settings import ELEVATOR_IMAGE, FLOOR_HEIGHT, WINDOW_HEIGHT, ELEVATOR_SPEED, INTERNAL_FLOOR_HEIGHT, AWAIT_TIME
+from settings import ELEVATOR_IMAGE, FLOOR_HEIGHT, WINDOW_HEIGHT, ELEVATOR_SPEED, INTERNAL_FLOOR_HEIGHT, AWAIT_TIME, \
+    FLOOR_TRANSITION_TIME
 
 
 # Define the elevator class
@@ -17,7 +18,7 @@ class Elevator(pygame.sprite.Sprite):
         self.target_floor = None
         self.target_number = None
         self.lest_floor = 1
-        # self.current_floor = 1
+        self.current_floor = 1
         self.direction = 0
         self.speed = ELEVATOR_SPEED  # Pixels per frame
 
@@ -54,6 +55,7 @@ class Elevator(pygame.sprite.Sprite):
 
     def stop(self, passed_time):
         self.direction = 0
+        self.current_floor = self.target_number
         if self.stop_time == 0:
             pygame.mixer.music.play()
         self.stop_time += passed_time
@@ -61,9 +63,11 @@ class Elevator(pygame.sprite.Sprite):
             self.target_floor.called = False  # need to note the choice in the ducomente
             self.target_number = None
             self.stop_time = 0
-            # self.fix_time()
         else:
             self.availability_time -= passed_time
         print("stop", self.availability_time)
+
+    def get_time_to_arrival(self, floor_number):
+        return self.availability_time
 
 # TODO fix the availability_time

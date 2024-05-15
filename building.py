@@ -5,7 +5,7 @@ from floor import Floor
 from button import Button
 from elevator import Elevator
 from settings import FLOOR_IMAGE, FLOOR_WIDTH, FLOOR_HEIGHT, \
-    ELEVATOR_WIDTH, NUM_ELEVATORS, ELEVATOR_SPEED, AWAIT_TIME, INTERNAL_FLOOR_HEIGHT
+    ELEVATOR_WIDTH, NUM_ELEVATORS, ELEVATOR_SPEED, AWAIT_TIME, INTERNAL_FLOOR_HEIGHT, FLOOR_TRANSITION_TIME
 
 
 class Building(pygame.sprite.Group):
@@ -36,7 +36,7 @@ class Building(pygame.sprite.Group):
             self.buttons.add(button)
         for i in range(NUM_ELEVATORS):
             elevator = Elevator(i)
-            elevator.rect.x = FLOOR_WIDTH + ELEVATOR_WIDTH * (i + 1)
+            elevator.rect.x = self.start_x + FLOOR_WIDTH // 2 + ELEVATOR_WIDTH * i
             elevator.rect.y = self.start_y - FLOOR_HEIGHT // 2
             self.elevators.add(elevator)
 
@@ -46,8 +46,12 @@ class Building(pygame.sprite.Group):
                 pygame.draw.line(surface, "BLACK", (floor.rect.left, floor.rect.top - 3.5),
                                  (floor.rect.right - 1, floor.rect.top - 3.5), 7)
 
-    def call_elevator(self, destination, button: Button):
+    def call_elevator(self, destination, button: Button, surface):
         min_availability_elevator = self.choose_faster_elevator(destination)
+
+        target_floor = self.floors.sprites()[button.floor_number - 1]
+        time_to_arrival = min_availability_elevator.get_time_to_arrival(target_floor.number)
+        target_floor.update_timer(surface, 0, time_to_arrival)
 
         # update the time of availability for the chosen elevator
         min_availability_elevator.availability_time += AWAIT_TIME
@@ -58,8 +62,7 @@ class Building(pygame.sprite.Group):
 
     def choose_faster_elevator(self, destination):
         choose_elevator = choice(list(self.elevators.sprites()))
-        # TODO change to info
-        min_availability = 90000000000000000
+        min_availability = float('inf')
         for elevator in self.elevators:
             source = elevator.lest_floor
             availability = elevator.availability_time + self.fast_time(source, destination)
@@ -73,17 +76,19 @@ class Building(pygame.sprite.Group):
 
     def fast_time(self, first_floor, second_floor):
         distance = abs(first_floor - second_floor)
-        return distance * 500  # it's not so correct but is hav no affect
+        return distance * FLOOR_TRANSITION_TIME  # it's not so correct but is hav no affect
 
     def update(self, clock, surface):
+        for floor in self.floors:
+            floor.timer.draw(surface)
+            floor.update_timer(surface, clock.get_time())
         for elevator in self.elevators:
             elevator.check_requests()
             elevator.update(clock.get_time())
+            # if elevator.target_number is not None:
         self.floors.draw(surface)
         self.draw_lines(surface)
         self.elevators.draw(surface)
         for button in self.buttons:
             button.def_color()
             button.draw(surface)
-
-

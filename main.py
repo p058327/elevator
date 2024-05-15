@@ -9,18 +9,19 @@ pygame.init()
 # Initialize the sound of the stopping
 pygame.mixer.init()
 pygame.mixer.music.load(st.STOP_SOUND)
+background = st.BACKGROUND_IMAGE
 
 # Create the building
 building = Building(st.NUM_FLOORS, st.BUILDING_START_POINT)
-timer = Timer(900, 100, 20, 40)
+# timer = Timer(900, 100, 20, 40)
 
 
 def check_click(click):
     for button in building.buttons:
-        if button.rect.collidepoint(event.pos):
+        if button.rect.collidepoint(click.pos) and button.called is False:
             button.called = True
             destination = button.floor_number
-            building.call_elevator(destination, button)
+            building.call_elevator(destination, button, st.DISPLAY)
 
 
 # Game loop
@@ -41,9 +42,11 @@ while running:
 
     # Clear the display
     st.DISPLAY.fill(st.WHITE)
+    st.DISPLAY.blit(background, st.DISPLAY.get_rect())
+    background.blit(st.DISPLAY, st.DISPLAY.get_rect())
 
-    timer.update(clock.get_time())
-    timer.draw()
+    # timer.update(clock.get_time())
+    # timer.draw()
 
     # update the building state
     building.update(clock, st.DISPLAY)
