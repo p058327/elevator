@@ -1,11 +1,11 @@
+import pygame
 from random import choice
 
-import pygame
-
-from elevator import Elevator
 from floor import Floor
 from button import Button
-from settings import FLOOR_IMAGE, FLOOR_WIDTH, FLOOR_HEIGHT, NUM_ELEVATORS, ELEVATOR_WIDTH
+from elevator import Elevator
+from settings import FLOOR_IMAGE, FLOOR_WIDTH, FLOOR_HEIGHT, \
+    ELEVATOR_WIDTH, NUM_ELEVATORS, ELEVATOR_SPEED, AWAIT_TIME, INTERNAL_FLOOR_HEIGHT
 
 
 class Building(pygame.sprite.Group):
@@ -21,9 +21,9 @@ class Building(pygame.sprite.Group):
         # TODO self.total_height = num_of_floors * (FLOOR_HEIGHT + 7)
 
         for floor in range(num_of_floors):
-            # determinate the position of the floor according the building position and floor floor_number
-            x = self.start_x + FLOOR_WIDTH // 2
-            y = self.start_y - floor * (FLOOR_HEIGHT + 7)
+            # determinate the position of the floor according the building position and floor number
+            x = self.start_x
+            y = self.start_y - floor * INTERNAL_FLOOR_HEIGHT
             floor = Floor(FLOOR_IMAGE, floor + 1, (x, y))
             self.floors.add(floor)
             # Create a button for each floor
@@ -44,23 +44,46 @@ class Building(pygame.sprite.Group):
         for floor in self.floors:
             if floor.number < self.floors.sprites()[-1].number:
                 pygame.draw.line(surface, "BLACK", (floor.rect.left, floor.rect.top - 3.5),
-                                 (floor.rect.right, floor.rect.top - 3.5), 7)
+                                 (floor.rect.right - 1, floor.rect.top - 3.5), 7)
 
     def call_elevator(self, destination, button: Button):
-        min_availability_time = float('inf')  # Default minimum value so that any value will be less than it
-        min_availability_obj = choice(list(self.elevators.sprites()))
+        min_availability_elevator = self.choose_faster_elevator(destination)
+
+        # update the time of availability for the chosen elevator
+        min_availability_elevator.availability_time += AWAIT_TIME
+
+        # update the chosen elevator with the destination
+        min_availability_elevator.add_button(button)
+        min_availability_elevator.lest_floor = button.floor_number
+
+    def choose_faster_elevator(self, destination):
+        choose_elevator = choice(list(self.elevators.sprites()))
+        # TODO change to info
+        min_availability = 90000000000000000
         for elevator in self.elevators:
-            if elevator.availability_time < min_availability_time:
-                min_availability_time = elevator.availability_time
-                min_availability_obj = elevator
-        min_availability_obj.target_floor = destination
-        min_availability_obj.add_button(button)
-        add_time = (abs(min_availability_obj.lest_floor - destination) * (FLOOR_HEIGHT + 7) // 4)
-        min_availability_obj.availability_time += add_time
+            source = elevator.lest_floor
+            availability = elevator.availability_time + self.fast_time(source, destination)
+            if availability < min_availability:
+                choose_elevator = elevator
+                min_availability = availability
+            # print(elevator.number, elevator.availability_time)
+        choose_elevator.availability_time = min_availability
+        # print(choose_elevator.number, min_availability)
+        return choose_elevator
+
+    def fast_time(self, first_floor, second_floor):
+        distance = abs(first_floor - second_floor)
+        return distance * 500  # it's not so correct but is hav no affect
+
+    def update(self, clock, surface):
+        for elevator in self.elevators:
+            elevator.check_requests()
+            elevator.update(clock.get_time())
+        self.floors.draw(surface)
+        self.draw_lines(surface)
+        self.elevators.draw(surface)
+        for button in self.buttons:
+            button.def_color()
+            button.draw(surface)
 
 
-# class Buildings(pygame.sprite.Group()):
-#     def __init__(self, num_of_buildings):
-#         super().__init__()
-#         for i in range(num_of_buildings):
-#             Buildings.add(Building(i))

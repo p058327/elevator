@@ -1,5 +1,5 @@
 import pygame
-from settings import GRAY_1
+from settings import GRAY_1, BLACK, GREEN
 
 
 class Button(pygame.sprite.Sprite):
@@ -21,3 +21,9 @@ class Button(pygame.sprite.Sprite):
         text = font.render(str(self.floor_number), True, self.color)
         text_rect = text.get_rect(center=self.rect.center)
         surface.blit(text, text_rect)
+
+    def def_color(self):
+        if self.called:
+            self.color = GREEN
+        else:
+            self.color = BLACK

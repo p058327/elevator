@@ -3,20 +3,27 @@ import pygame
 
 # Set up the display
 WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 900
+WINDOW_HEIGHT = 800
 DISPLAY = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Elevator Challenge")
 
-# Define the floor_number of requested_buttons and elevators
+# Define the floor_number of requested_floors and elevators
 NUM_FLOORS = 7
 NUM_ELEVATORS = 2
 
 # Define object size
-BUILDING_WIDTH = WINDOW_WIDTH // 3
 FLOOR_WIDTH = 300
 FLOOR_HEIGHT = 103  # this height is according the project orders
 ELEVATOR_WIDTH = 60
 ELEVATOR_HEIGHT = FLOOR_HEIGHT
+LINE_WIDTH = 7
+INTERNAL_FLOOR_HEIGHT = FLOOR_HEIGHT + LINE_WIDTH
+
+FPS = 60
+STOP_SOUND = "resources/ding.mp3"
+ELEVATOR_SPEED = 4
+BUILDING_START_POINT = (FLOOR_WIDTH // 2 + 10, (WINDOW_HEIGHT - FLOOR_HEIGHT // 2) - 10)
+AWAIT_TIME = 2000  # 2 seconds for awaiting in milliseconds
 
 # Define colors
 RED = (255, 0, 0)
@@ -28,13 +35,15 @@ GRAY_1 = (210, 210, 210)
 LIGHT_GRAY = (190, 190, 190)
 
 # Load the elevator image
-ELEVATOR = pygame.image.load("elv.png")
+ELEVATOR = pygame.image.load("resources/elv.png")
 ELEVATOR_SIZE = ELEVATOR_WIDTH, FLOOR_HEIGHT
 ELEVATOR_IMAGE = pygame.transform.scale(ELEVATOR, ELEVATOR_SIZE)
 
 # Load the floor image
-FLOOR = pygame.image.load("floor.png")
+FLOOR = pygame.image.load("resources/floor.png")
 FLOOR_SIZE = FLOOR_WIDTH, FLOOR_HEIGHT
 FLOOR_IMAGE = pygame.transform.scale(FLOOR, FLOOR_SIZE)
 
-SCROLL_SPEED = 10
+# TODO
+#  BUILDING_WIDTH = WINDOW_WIDTH // 3
+#  SCROLL_SPEED = 10

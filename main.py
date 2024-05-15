@@ -1,48 +1,52 @@
 import pygame
-
 import settings as st
 from building import Building
-from elevator import Elevator
+from timer import Timer
 
 # Initialize Pygame
 pygame.init()
 
+# Initialize the sound of the stopping
+pygame.mixer.init()
+pygame.mixer.music.load(st.STOP_SOUND)
+
 # Create the building
-building = Building(st.NUM_FLOORS, (10, (st.WINDOW_HEIGHT - st.FLOOR_HEIGHT // 2)))
+building = Building(st.NUM_FLOORS, st.BUILDING_START_POINT)
+timer = Timer(900, 100, 20, 40)
+
+
+def check_click(click):
+    for button in building.buttons:
+        if button.rect.collidepoint(event.pos):
+            button.called = True
+            destination = button.floor_number
+            building.call_elevator(destination, button)
+
 
 # Game loop
 clock = pygame.time.Clock()
 running = True
 while running:
-    clock.tick(60)  # Limit the frame rate
+    clock.tick(st.FPS)  # Limit the frame rate
+    # print(clock.)
 
     # Handle events
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Check if a call button was clicked
-            for button in building.buttons:
-                if button.rect.collidepoint(event.pos):
-                    button.called = True
-                    destination = button.floor_number
-                    building.call_elevator(destination, button)
-                if button.called:
-                    button.color = st.GREEN
-                else:
-                    button.color = st.BLACK
-            for elevator in building.elevators:
-                elevator.check_requests()
-                elevator.update()
+            check_click(event)
 
     # Clear the display
     st.DISPLAY.fill(st.WHITE)
 
-    building.floors.draw(st.DISPLAY)
-    building.draw_lines(st.DISPLAY)
-    building.elevators.draw(st.DISPLAY)
-    for button in building.buttons:
-        button.draw(st.DISPLAY)
+    timer.update(clock.get_time())
+    timer.draw()
+
+    # update the building state
+    building.update(clock, st.DISPLAY)
 
     # Update the display
     pygame.display.flip()
@@ -51,12 +55,8 @@ while running:
 pygame.quit()
 
 # TODO
-
 # from background import Background
-
 # background_object = Background()
-
 # background_object.update()
 # background_object.render()
 # available_elevator = next((elevator for elevator in elevators if elevator.available), None)
-
