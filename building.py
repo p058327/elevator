@@ -50,7 +50,7 @@ class Building(pygame.sprite.Group):
         min_availability_elevator = self.choose_faster_elevator(destination)
 
         target_floor = self.floors.sprites()[button.floor_number - 1]
-        time_to_arrival = min_availability_elevator.get_time_to_arrival(target_floor.number)
+        time_to_arrival = min_availability_elevator.get_time_to_arrival()
         target_floor.update_timer(surface, 0, time_to_arrival)
 
         # update the time of availability for the chosen elevator

@@ -8,8 +8,8 @@ DISPLAY = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Elevator Challenge")
 
 # Define the floor_number of requested_floors and elevators
-NUM_FLOORS = 7
-NUM_ELEVATORS = 3
+NUM_FLOORS = 12
+NUM_ELEVATORS = 2
 
 # Define object size
 FLOOR_WIDTH = 300
@@ -32,7 +32,7 @@ FLOOR_TRANSITION_TIME = 500
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 120)
+GREEN = (0, 235, 0)
 GRAY = (128, 128, 128)
 GRAY_1 = (210, 210, 210)
 LIGHT_GRAY = (190, 190, 190)

@@ -1,6 +1,5 @@
 import pygame
-from settings import ELEVATOR_IMAGE, FLOOR_HEIGHT, WINDOW_HEIGHT, ELEVATOR_SPEED, INTERNAL_FLOOR_HEIGHT, AWAIT_TIME, \
-    FLOOR_TRANSITION_TIME
+from settings import ELEVATOR_IMAGE, WINDOW_HEIGHT, ELEVATOR_SPEED, INTERNAL_FLOOR_HEIGHT, AWAIT_TIME
 
 
 # Define the elevator class
@@ -67,7 +66,7 @@ class Elevator(pygame.sprite.Sprite):
             self.availability_time -= passed_time
         print("stop", self.availability_time)
 
-    def get_time_to_arrival(self, floor_number):
+    def get_time_to_arrival(self):
         return self.availability_time
 
 # TODO fix the availability_time
