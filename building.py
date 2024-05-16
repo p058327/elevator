@@ -37,7 +37,7 @@ class Building(pygame.sprite.Group):
         for i in range(num_of_elevators):
             elevator = Elevator(i)
             elevator.rect.x = self.start_x + FLOOR_WIDTH // 2 + ELEVATOR_WIDTH * i
-            elevator.rect.y = self.start_y - FLOOR_HEIGHT // 2
+            elevator.rect.y = self.start_y - FLOOR_HEIGHT // 2 + 2
             self.elevators.add(elevator)
 
     def draw_lines(self, surface):
@@ -49,12 +49,8 @@ class Building(pygame.sprite.Group):
     def call_elevator(self, destination, button: Button, surface):
         min_availability_elevator = self.choose_faster_elevator(destination)
 
-        target_floor = self.floors.sprites()[button.floor_number - 1]
-        time_to_arrival = min_availability_elevator.get_time_to_arrival()
-        target_floor.update_timer(surface, 0, time_to_arrival)
-
-        # update the time of availability for the chosen elevator
-        min_availability_elevator.availability_time += AWAIT_TIME
+        target = self.floors.sprites()[button.floor_number - 1]
+        self.update_time(destination, min_availability_elevator, target, surface)
 
         # update the chosen elevator with the destination
         min_availability_elevator.add_button(button)
@@ -65,18 +61,26 @@ class Building(pygame.sprite.Group):
         min_availability = float('inf')
         for elevator in self.elevators:
             source = elevator.lest_floor
-            availability = elevator.availability_time + self.fast_time(source, destination)
+            availability = elevator.availability_time + self.transition_time(source, destination)
             if availability < min_availability:
                 choose_elevator = elevator
                 min_availability = availability
-            # print(elevator.number, elevator.availability_time)
-        choose_elevator.availability_time = min_availability
-        # print(choose_elevator.number, min_availability)
         return choose_elevator
 
-    def fast_time(self, first_floor, second_floor):
+    def update_time(self, destination, chosen_elevator, target_floor, surface):
+        # update the time of availability without the 2 seconds of waiting in the destination
+        source = chosen_elevator.lest_floor
+        chosen_elevator.availability_time += self.transition_time(source, destination)
+
+        time_to_arrival = chosen_elevator.get_time_to_arrival()
+        target_floor.update_timer(surface, 0, time_to_arrival)
+
+        # update the time of availability for the 2 seconds of waiting in the destination
+        chosen_elevator.availability_time += AWAIT_TIME
+
+    def transition_time(self, first_floor, second_floor):
         distance = abs(first_floor - second_floor)
-        return distance * FLOOR_TRANSITION_TIME  # it's not so correct but is hav no affect
+        return distance * FLOOR_TRANSITION_TIME
 
     def update(self, clock, surface):
         for floor in self.floors:
