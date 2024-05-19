@@ -23,7 +23,7 @@ def check_click():
         for floor in building.floors:
             if floor.button.rect.collidepoint(event.pos) and floor.called is False:
                 floor.button.called = True
-                floor.button.called = True
+                floor.called = True
                 destination = floor.number
                 buildings.call_elevator(i, destination, floor, DISPLAY)
 
