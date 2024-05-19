@@ -1,5 +1,5 @@
 import pygame
-from settings import GRAY_1, BLACK, GREEN
+from settings import GRAY_1, GREEN, FONT
 
 
 class Button(pygame.sprite.Sprite):
@@ -13,11 +13,10 @@ class Button(pygame.sprite.Sprite):
         self.color = color
         self.radius = radius
         self.called = False
-        self.designated_elevator = None
 
     def draw(self, surface):
         pygame.draw.rect(surface, GRAY_1, self.rect, 0, self.radius)
-        font = pygame.font.Font('freesansbold.ttf', 50)
+        font = pygame.font.Font(FONT, 50)
         text = font.render(str(self.floor_number), True, self.color)
         text_rect = text.get_rect(center=self.rect.center)
         surface.blit(text, text_rect)
@@ -26,4 +25,4 @@ class Button(pygame.sprite.Sprite):
         if self.called:
             self.color = GREEN
         else:
-            self.color = BLACK
+            self.color = "BLACK"

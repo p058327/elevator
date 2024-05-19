@@ -1,7 +1,7 @@
 import pygame
 import math
 
-from settings import RED, GREEN, LIGHT_GRAY, BLACK, WHITE
+from settings import LIGHT_GRAY, FONT, GREEN
 
 
 class Timer(pygame.sprite.Sprite):
@@ -12,11 +12,6 @@ class Timer(pygame.sprite.Sprite):
         self.radius = radius
         self.initial_time = initial_time
         self.remaining_time = initial_time
-        self.image = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        # self.draw(surface)
 
     def update(self, time_delta, surface, new_initial_time=None):
         if new_initial_time is not None:
@@ -26,16 +21,15 @@ class Timer(pygame.sprite.Sprite):
         self.draw(surface)
 
     def draw(self, surface):
-        # self.image.fill((0, 0, 0, 0))  # Clear the image
-        pygame.draw.circle(surface, GREEN, (self.rect.x, self.rect.y), self.radius, 10)
-        pygame.draw.circle(surface, WHITE, (self.rect.x, self.rect.y), self.radius - 10)
-        remaining_fraction = 0 if self.initial_time == 0 or self.remaining_time == 0 \
-            else self.remaining_time / self.initial_time
-        pygame.draw.arc(surface, RED, (self.x - self.radius, self.y - self.radius, self.radius * 2, self.radius * 2),
+        pygame.draw.circle(surface, GREEN, (self.x, self.y), self.radius, 10)
+        pygame.draw.circle(surface, "WHITE", (self.x, self.y), self.radius - 10)
+
+        remaining_fraction = 0 if self.initial_time == 0 else self.remaining_time / self.initial_time
+        pygame.draw.arc(surface, "RED", (self.x - self.radius, self.y - self.radius, self.radius * 2, self.radius * 2),
                         math.pi * 0, math.pi * remaining_fraction * 2, 10)
-        # pygame.draw.circle(surface, RED, (self.rect.x, self.rect.y), int(self.radius * remaining_fraction), 10)
-        text_color = LIGHT_GRAY if self.remaining_time == 0 else BLACK
-        font = pygame.font.Font('freesansbold.ttf', 30)
+
+        text_color = LIGHT_GRAY if self.remaining_time == 0 else "BLACK"
+        font = pygame.font.Font(FONT, 30)
         text = font.render(str(math.ceil(self.remaining_time / 1000)), True, text_color)
-        text_rect = text.get_rect(center=(self.rect.x, self.rect.y))
+        text_rect = text.get_rect(center=(self.x, self.y))
         surface.blit(text, text_rect)

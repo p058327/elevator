@@ -1,35 +1,36 @@
 import pygame
-import settings as st
-from building_factory import create_building
-
+from building_factory import create_buildings
+from settings import FPS, STOP_SOUND, BACKGROUND_IMAGE, NUM_BUILDINGS, DISPLAY
 
 # Initialize Pygame
 pygame.init()
 
-# Initialize the sound of the stopping
+# Initialize the clock and limit the frame rate
+clock = pygame.time.Clock()
+clock.tick(FPS)
+
+# Initialize stopping sound
 pygame.mixer.init()
-pygame.mixer.music.load(st.STOP_SOUND)
-background = st.BACKGROUND_IMAGE
+pygame.mixer.music.load(STOP_SOUND)
+background = BACKGROUND_IMAGE
 
 # Create the building
-building = create_building(0, st.NUM_FLOORS, st.NUM_ELEVATORS)
+buildings = create_buildings(NUM_BUILDINGS)
 
 
-def check_click(click):
-    for button in building.buttons:
-        if button.rect.collidepoint(click.pos) and button.called is False:
-            button.called = True
-            destination = button.floor_number
-            building.call_elevator(destination, button, st.DISPLAY)
+def check_click():
+    for i, building in enumerate(buildings.buildings):
+        for floor in building.floors:
+            if floor.button.rect.collidepoint(event.pos) and floor.called is False:
+                floor.button.called = True
+                floor.button.called = True
+                destination = floor.number
+                buildings.call_elevator(i, destination, floor, DISPLAY)
 
 
 # Game loop
-clock = pygame.time.Clock()
 running = True
 while running:
-    clock.tick(st.FPS)  # Limit the frame rate
-    # print(clock.)
-
     # Handle events
     events = pygame.event.get()
     for event in events:
@@ -37,25 +38,16 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Check if a call button was clicked
-            check_click(event)
+            check_click()
 
     # Clear the display
-    st.DISPLAY.fill(st.WHITE)
-    st.DISPLAY.blit(background, st.DISPLAY.get_rect())
-    background.blit(st.DISPLAY, st.DISPLAY.get_rect())
+    DISPLAY.blit(background, DISPLAY.get_rect())
 
-    # update the building state
-    building.update(clock, st.DISPLAY)
+    # Update all buildings
+    buildings.update(clock, DISPLAY)
 
     # Update the display
     pygame.display.flip()
 
 # Quit Pygame
 pygame.quit()
-
-# TODO
-# from background import Background
-# background_object = Background()
-# background_object.update()
-# background_object.render()
-# available_elevator = next((elevator for elevator in elevators if elevator.available), None)
