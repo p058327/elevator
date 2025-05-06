@@ -16,19 +16,7 @@ This project simulates a building with multiple floors and elevators. Users can 
     cd ./elevator
     ```
 
-3.  **Create and activate the virtual environment:**
-
-    ```bash
-    python3 -m venv venv
-    ```
-
-    Then, activate the virtual environment:
-
-    ```bash
-    source venv/bin/activate
-    ```
-
-4.  **Install the required dependencies:**
+3.  **Install the required dependencies:**
 
     ```bash
     pip install -r requirements.txt
