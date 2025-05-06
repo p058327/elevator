@@ -26,9 +26,7 @@ This project simulates a building with multiple floors and elevators. Users can 
 
 After completing the installation, you can run the simulation using the following command:
 
-    ```bash
     python3 main.py
-    ```
 
 **Elevator Calling and Destination Arrival Algorithm:**
 
