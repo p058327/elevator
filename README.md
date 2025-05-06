@@ -28,6 +28,7 @@ After completing the installation, you can run the simulation using the followin
 
 ```bash
 python3 main.py
+```
 
 **Elevator Calling and Destination Arrival Algorithm:**
 
