@@ -2,6 +2,45 @@
 
 This project simulates a building with multiple floors and elevators. Users can call an elevator from any floor by clicking on the call button for that floor. The system then determines the fastest available elevator to service the request and assigns it to that destination floor.
 
+### Installation Steps
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone git@github.com:p058327/elevator.git
+    ```
+
+2.  **Navigate to the project directory:**
+
+    ```bash
+    cd ./elevator
+    ```
+
+3.  **Create and activate the virtual environment:**
+
+    ```bash
+    python3 -m venv venv
+    ```
+
+    Then, activate the virtual environment:
+
+    ```bash
+    source venv/bin/activate
+    ```
+
+4.  **Install the required dependencies:**
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Running the Simulation
+
+After completing the installation, you can run the simulation using the following command:
+
+```bash
+python3 main.py
+
 **Elevator Calling and Destination Arrival Algorithm:**
 
 1. **Calling an Elevator**: When a user clicks on a floor's call button, the system initiates the elevator calling process. The `check_click` function in `main.py` detects the click event and calls the `call_elevator` method of the corresponding `Building` object.
